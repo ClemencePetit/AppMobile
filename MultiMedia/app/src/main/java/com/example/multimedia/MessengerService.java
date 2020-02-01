@@ -69,17 +69,26 @@ public class MessengerService extends Service {
         return START_STICKY;
     }
 
+    //play a song located in tha path given
     private static void processPlayRequest(Uri path){
         mp.reset();
         mp = MediaPlayer.create(context, path);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
+            public void onCompletion(MediaPlayer mediaPlayer){
+                index = (index+1) % musicPaths.size() ;
+                MessengerService.changeIndex(index);
+            }
+        });
         mp.start();
     }
 
+    //change the music according to newIndex
     public static void changeIndex(int newIndex){
         index = newIndex;
         processPlayRequest(Uri.parse(musicPaths.get(newIndex)));
     }
 
+    //start the mediaplayer from the first song
     public static void start(){
         if(!mp.isPlaying()){
             changeIndex(0);

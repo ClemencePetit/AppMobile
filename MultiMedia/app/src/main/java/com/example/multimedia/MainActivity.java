@@ -87,10 +87,12 @@ public class MainActivity extends AppCompatActivity {
         TextView Tv = (TextView) v;
         Toast.makeText(getApplicationContext(),"Playing : " + Tv.getText(),Toast.LENGTH_SHORT).show();
         int index = listOfSongs.getNames().indexOf(Tv.getText());
+        //on change l'index de la chanson joué par le mediaplayer
         MessengerService.changeIndex(index);
     }
 
     public void play(View v){
+        //on démarre le media player
         MessengerService.start();
     }
     /*
