@@ -9,6 +9,8 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -32,15 +34,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //on récupère la liste des musiques
         setContentView(R.layout.activity_main);
-
-
 
         final String musicOnly = MediaStore.Audio.Media.IS_MUSIC + " != 0 ";
 
         //AJOUTER PROTECTION
 
         listOfSongs = new ListOfSongs(this,musicOnly);
+
+        //On affiche la liste des musiques
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.simplerow, listOfSongs.getNames());
         ListView listView =(ListView) findViewById(R.id.listMusics);
         listView.setAdapter(adapter);
@@ -70,10 +74,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void startMusic(View v){
+        startService(new Intent(this, MessengerService.class));
+    }
+    /*
     @Override
     protected void OnStart(){
         super.onStart();
         bindService(new Intent(this, MessengerService.class),mConnection,)
     }
-
+*/
 }
