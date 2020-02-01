@@ -19,6 +19,7 @@ import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,7 +76,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startMusic(View v){
-        startService(new Intent(this, MessengerService.class));
+        Button b = (Button) v;
+        Toast.makeText(getApplicationContext(),b.getText(),Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, MessengerService.class);
+        intent.putExtra("index",1);
+        startService(intent);
     }
     /*
     @Override

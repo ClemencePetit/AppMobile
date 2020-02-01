@@ -53,14 +53,19 @@ public class MessengerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        processPlayRequest();
+        ListOfSongs los = new ListOfSongs(this,musicOnly);
+        int index = 0;
+        Bundle extras = intent.getExtras();
+        if(extras != null){
+            index = (Integer) extras.get("index");
+        }
+        processPlayRequest(Uri.parse(los.getPaths().get(index)));
         return START_STICKY;
     }
 
-    private void processPlayRequest(){
-        ListOfSongs los = new ListOfSongs(this,musicOnly);
+    private void processPlayRequest(Uri path){
         mp.reset();
-        mp = MediaPlayer.create(this, Uri.parse(los.getPaths().get(0)));
+        mp = MediaPlayer.create(this, path);
         mp.start();
     }
 }
