@@ -49,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.simplerow, listOfSongs.getNames());
         ListView listView =(ListView) findViewById(R.id.listMusics);
         listView.setAdapter(adapter);
+
+
+        //Linking with service
+        Intent intent = new Intent(this, MessengerService.class);
+        ArrayList<String> paths = listOfSongs.getPaths();
+        intent.putExtra("allPaths", paths);
+
+        startService(intent);
     }
 
     private ServiceConnection mConnectier = new ServiceConnection() {
@@ -79,22 +87,11 @@ public class MainActivity extends AppCompatActivity {
         TextView Tv = (TextView) v;
         Toast.makeText(getApplicationContext(),"Playing : " + Tv.getText(),Toast.LENGTH_SHORT).show();
         int index = listOfSongs.getNames().indexOf(Tv.getText());
-        //startMusic(index);
-
-        Intent intent = new Intent(this,MessengerService.class);
         MessengerService.changeIndex(index);
     }
 
     public void play(View v){
-        Toast.makeText(getApplicationContext(),"Playing : " + listOfSongs.getNames().get(0),Toast.LENGTH_SHORT).show();
-        startMusic(0);
-    }
-    public void startMusic(int index){
-        Intent intent = new Intent(this, MessengerService.class);
-        ArrayList<String> paths = listOfSongs.getPaths();
-        intent.putExtra("allPaths", paths);
-        intent.putExtra("index",index);
-        startService(intent);
+        MessengerService.start();
     }
     /*
     @Override

@@ -26,6 +26,7 @@ public class MessengerService extends Service {
     public static MediaPlayer mp;
     private static ArrayList<String> musicPaths;
     private static Context context;
+    private static int index;
 
     final String musicOnly = MediaStore.Audio.Media.IS_MUSIC + " != 0 ";
 
@@ -64,9 +65,7 @@ public class MessengerService extends Service {
         Bundle extras = intent.getExtras();
         if(extras != null){
             musicPaths = (ArrayList<String>) extras.get("allPaths");
-            index = (Integer) extras.get("index");
         }
-        processPlayRequest(Uri.parse(musicPaths.get(index)));
         return START_STICKY;
     }
 
@@ -77,6 +76,13 @@ public class MessengerService extends Service {
     }
 
     public static void changeIndex(int newIndex){
+        index = newIndex;
         processPlayRequest(Uri.parse(musicPaths.get(newIndex)));
+    }
+
+    public static void start(){
+        if(!mp.isPlaying()){
+            changeIndex(0);
+        }
     }
 }
