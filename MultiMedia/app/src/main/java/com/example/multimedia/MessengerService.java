@@ -53,13 +53,12 @@ public class MessengerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        ListOfSongs los = new ListOfSongs(this,musicOnly);
-        int index = 0;
+        String path = "";
         Bundle extras = intent.getExtras();
         if(extras != null){
-            index = (Integer) extras.get("index");
+            path = (String) extras.get("path");
         }
-        processPlayRequest(Uri.parse(los.getPaths().get(index)));
+        processPlayRequest(Uri.parse(path));
         return START_STICKY;
     }
 
