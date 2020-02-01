@@ -79,17 +79,21 @@ public class MainActivity extends AppCompatActivity {
         TextView Tv = (TextView) v;
         Toast.makeText(getApplicationContext(),"Playing : " + Tv.getText(),Toast.LENGTH_SHORT).show();
         int index = listOfSongs.getNames().indexOf(Tv.getText());
-        String path = listOfSongs.getPaths().get(index);
-        startMusic(path);
+        //startMusic(index);
+
+        Intent intent = new Intent(this,MessengerService.class);
+        MessengerService.changeIndex(index);
     }
 
     public void play(View v){
         Toast.makeText(getApplicationContext(),"Playing : " + listOfSongs.getNames().get(0),Toast.LENGTH_SHORT).show();
-        startMusic(listOfSongs.getPaths().get(0));
+        startMusic(0);
     }
-    public void startMusic(String path){
+    public void startMusic(int index){
         Intent intent = new Intent(this, MessengerService.class);
-        intent.putExtra("path",path);
+        ArrayList<String> paths = listOfSongs.getPaths();
+        intent.putExtra("allPaths", paths);
+        intent.putExtra("index",index);
         startService(intent);
     }
     /*

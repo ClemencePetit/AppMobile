@@ -1,6 +1,7 @@
 package com.example.multimedia;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import static android.media.session.PlaybackState.ACTION_PLAY;
@@ -22,6 +24,8 @@ public class MessengerService extends Service {
     static final int MSG_SAY_HELLO=1;
 
     public static MediaPlayer mp;
+    private static ArrayList<String> musicPaths;
+    private static Context context;
 
     final String musicOnly = MediaStore.Audio.Media.IS_MUSIC + " != 0 ";
 
@@ -53,18 +57,26 @@ public class MessengerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        String path = "";
+        //musicPaths = null;
+        context = this;
+        int index = 1;
+        //String path = "";
         Bundle extras = intent.getExtras();
         if(extras != null){
-            path = (String) extras.get("path");
+            musicPaths = (ArrayList<String>) extras.get("allPaths");
+            index = (Integer) extras.get("index");
         }
-        processPlayRequest(Uri.parse(path));
+        processPlayRequest(Uri.parse(musicPaths.get(index)));
         return START_STICKY;
     }
 
-    private void processPlayRequest(Uri path){
+    private static void processPlayRequest(Uri path){
         mp.reset();
-        mp = MediaPlayer.create(this, path);
+        mp = MediaPlayer.create(context, path);
         mp.start();
+    }
+
+    public static void changeIndex(int newIndex){
+        processPlayRequest(Uri.parse(musicPaths.get(newIndex)));
     }
 }
