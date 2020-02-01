@@ -59,6 +59,7 @@ public class MessengerService extends Service {
 
     private void processPlayRequest(){
         ListOfSongs los = new ListOfSongs(this,musicOnly);
+        mp.reset();
         mp = MediaPlayer.create(this, Uri.parse(los.getPaths().get(0)));
         mp.start();
     }
