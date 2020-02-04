@@ -1,18 +1,12 @@
 package com.example.multimedia;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -25,9 +19,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private Messenger mService = null;
     boolean bound;
     boolean sent=false;
-    boolean isPlaying=false;
     IntentFilter filter1;
     IntentFilter filter2;
     IntentFilter filter3;
@@ -136,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
             unbindService(mConnection);
             bound=false;
         }
-        //unregisterReceiver(mMBroadcastReceiver);
     }
 
 
@@ -154,13 +143,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             Message message;
-            /*if (isPlaying) {
-                message= Message.obtain(null, MessengerService.MSG_PAUSE,0,0);
-                //isPlaying = false;
-            } else {
-                message= Message.obtain(null, MessengerService.MSG_UNPAUSE,0,0);
-                //isPlaying = true;
-            }*/
             message= Message.obtain(null, MessengerService.MSG_PAUSE,0,0);
             try{
                 mService.send(message);
@@ -235,10 +217,6 @@ public class MainActivity extends AppCompatActivity {
    private BroadcastReceiver mMBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            //Toast.makeText(context,"azertyuio "+intent.getBooleanExtra("Status",false),Toast.LENGTH_SHORT).show();
-            //+intent.getBooleanExtra("Status",false)
-            //isPlaying = intent.getBooleanExtra("Status",false);
             if(intent.getAction().compareTo("isPlaying")==0){
                 if(intent.getBooleanExtra("Status",false))
                 {
@@ -250,23 +228,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }else if(intent.getAction().compareTo("startMusic")==0)
             {
-                //Toast.makeText(context, "start musique "+intent.getIntExtra("MaxDuration",0), Toast.LENGTH_SHORT).show();
+                ((TextView)findViewById(R.id.textTitle)).setText(listOfSongs.getNames().get(intent.getIntExtra("Index",0)));
                 seekBar.setMax(intent.getIntExtra("MaxDuration",0));
                 seekBar.setProgress(0);
             }else if(intent.getAction().compareTo("updateSeekbar")==0)
             {
-                //Toast.makeText(context, "start musique", Toast.LENGTH_SHORT).show();
                 seekBar.setProgress(intent.getIntExtra("Seek",0));
-               // playButton.setText(""+intent.getIntExtra("Seek",0));
             }
-            //Toast.makeText(getApplicationContext(),"playing : "+message,Toast.LENGTH_SHORT).show();
-            // Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }
     };
-
-
-
-
 }
 
 

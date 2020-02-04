@@ -5,14 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Messenger;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.widget.Toast;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 
@@ -35,7 +31,6 @@ public class MessengerService extends Service {
     public void onCreate()
     {
         super.onCreate();
-        //mp=new MediaPlayer();
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
             public void onCompletion(MediaPlayer mediaPlayer){
                 currentIndex = (currentIndex+1) % musicPaths.size() ;
@@ -43,7 +38,6 @@ public class MessengerService extends Service {
             }
         });
         context=this;
-        //Toast.makeText(context,"CREATE SERVICE",Toast.LENGTH_SHORT).show();
         updateSeekbar();
     }
 
@@ -53,8 +47,8 @@ public class MessengerService extends Service {
         try { mp.prepare(); } catch (Exception e) {}
         mp.start();
         Intent intent = new Intent();
-        //intent.putExtra("Status", mp.isPlaying());
         intent.putExtra("MaxDuration",mp.getDuration()/1000);
+        intent.putExtra("Index",currentIndex);
         intent.setAction("startMusic");
         sendBroadcast(intent);
     }
@@ -66,12 +60,7 @@ public class MessengerService extends Service {
         else{
             mp.start();
         }
-       //sendMessageToActivity();
     }
-
-    /*private void setUnpause(){
-        mp.start();
-    }*/
 
     class IncomingHandler extends Handler{
         @Override
@@ -89,11 +78,9 @@ public class MessengerService extends Service {
                     break;
                 case MSG_PAUSE:
                     setPause();
-                    //sendMessageToActivity();
                     break;
                 case MSG_SEEKBAR:
                     mp.seekTo(msg.arg1);
-                    //sendMessageToActivity();
                     break;
                 case MSG_NEXT:
                     currentIndex = (currentIndex+1) % musicPaths.size() ;
@@ -118,27 +105,11 @@ public class MessengerService extends Service {
         return mMessenger.getBinder();
     }
 
-    @Override
-    public void onDestroy() {
-       // Toast.makeText(context,"destroy",Toast.LENGTH_SHORT).show();
-
-    }
-
-    /*public boolean isPlaying()
-    {
-        return mp.isPlaying();
-    }*/
-
     private void sendMessageToActivity() {
-        Intent intent = new Intent();//context,MainActivity.class);
-        // You can also include some extra data.
+        Intent intent = new Intent();
         intent.putExtra("Status", mp.isPlaying());
         intent.setAction("isPlaying");
-        //LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         sendBroadcast(intent);
-
-        //Toast.makeText(context,"pifpafpouf",Toast.LENGTH_SHORT).show();
-
     }
 
     private void updateSeekbar() {
@@ -151,7 +122,6 @@ public class MessengerService extends Service {
                     intent.putExtra("Seek", mp.getCurrentPosition()/1000);
                     intent.setAction("updateSeekbar");
                     sendBroadcast(intent);
-                    //Toast.makeText(context,"pifpafpouf",Toast.LENGTH_SHORT).show();
                 }
                 handler.postDelayed(this, 1000);
             }
