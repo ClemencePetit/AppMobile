@@ -172,6 +172,42 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void next(View v) {
+
+        if(!sent) {
+            sendMessagePlay(1);
+        }
+        else {
+            Message message;
+            message= Message.obtain(null, MessengerService.MSG_NEXT,0,0);
+            try{
+                mService.send(message);
+            } catch (RemoteException e){
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    public void prev(View v) {
+
+        if(!sent) {
+            sendMessagePlay(listOfSongs.getPaths().size()-1);
+        }
+        else {
+            Message message;
+            message= Message.obtain(null, MessengerService.MSG_PREV,0,0);
+            try{
+                mService.send(message);
+            } catch (RemoteException e){
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
     public void sendMessagePlay(int index)
     {
         Message message;
@@ -214,8 +250,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }else if(intent.getAction().compareTo("startMusic")==0)
             {
-                Toast.makeText(context, "start musique "+intent.getIntExtra("MaxDuration",0), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "start musique "+intent.getIntExtra("MaxDuration",0), Toast.LENGTH_SHORT).show();
                 seekBar.setMax(intent.getIntExtra("MaxDuration",0));
+                seekBar.setProgress(0);
             }else if(intent.getAction().compareTo("updateSeekbar")==0)
             {
                 //Toast.makeText(context, "start musique", Toast.LENGTH_SHORT).show();

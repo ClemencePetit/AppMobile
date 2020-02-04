@@ -22,6 +22,8 @@ public class MessengerService extends Service {
     static final int MSG_PLAY=3;
     static final int MSG_PAUSE=4;
     static final int MSG_SEEKBAR=5;
+    static final int MSG_NEXT=6;
+    static final int MSG_PREV=7;
     private static ArrayList<String> musicPaths;
 
     private static Context context;
@@ -92,6 +94,14 @@ public class MessengerService extends Service {
                 case MSG_SEEKBAR:
                     mp.seekTo(msg.arg1);
                     //sendMessageToActivity();
+                    break;
+                case MSG_NEXT:
+                    currentIndex = (currentIndex+1) % musicPaths.size() ;
+                    setMusic();
+                    break;
+                case MSG_PREV:
+                    currentIndex = (currentIndex+musicPaths.size()-1) % musicPaths.size() ;
+                    setMusic();
                     break;
                     default:
                         super.handleMessage(msg);
