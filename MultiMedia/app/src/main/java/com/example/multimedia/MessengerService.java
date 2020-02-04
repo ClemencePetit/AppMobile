@@ -21,7 +21,7 @@ public class MessengerService extends Service {
     static final int MSG_SEND_PATHS=2;
     static final int MSG_PLAY=3;
     static final int MSG_PAUSE=4;
-    //static final int MSG_UNPAUSE=5;
+    static final int MSG_SEEKBAR=5;
     private static ArrayList<String> musicPaths;
 
     private static Context context;
@@ -89,10 +89,10 @@ public class MessengerService extends Service {
                     setPause();
                     //sendMessageToActivity();
                     break;
-                /*case MSG_UNPAUSE:
-                    setUnpause();
+                case MSG_SEEKBAR:
+                    mp.seekTo(msg.arg1);
                     //sendMessageToActivity();
-                    break;*/
+                    break;
                     default:
                         super.handleMessage(msg);
             }

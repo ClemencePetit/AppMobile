@@ -72,6 +72,31 @@ public class MainActivity extends AppCompatActivity {
         playButton=(Button)findViewById(R.id.playButton);
         seekBar=(SeekBar)findViewById(R.id.seekBar);
 
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser) {
+                    Message message = Message.obtain(null, MessengerService.MSG_SEEKBAR, progress * 1000, 0);
+                    try {
+                        mService.send(message);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
 
     }
 
@@ -201,6 +226,8 @@ public class MainActivity extends AppCompatActivity {
             // Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }
     };
+
+
 
 
 }
