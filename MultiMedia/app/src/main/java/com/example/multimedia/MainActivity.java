@@ -21,6 +21,7 @@ import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,8 +34,10 @@ public class MainActivity extends AppCompatActivity {
     private Messenger mService = null;
     boolean bound;
     boolean sent=false;
-    //boolean isPlaying=false;
+    boolean isPlaying=false;
     IntentFilter filter;
+    Button playButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +54,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.simplerow, listOfSongs.getNames());
         ListView listView =(ListView) findViewById(R.id.listMusics);
         listView.setAdapter(adapter);
-
         filter = new IntentFilter();
         filter.addAction("isPlaying");
-
+        playButton=(Button)findViewById(R.id.playButton);
         registerReceiver(mMBroadcastReceiver, filter);
 
 
@@ -82,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        unregisterReceiver(mMBroadcastReceiver);
+
+    }
+
+    @Override
     protected void onStop(){
         super.onStop();
         if(bound)
@@ -89,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             unbindService(mConnection);
             bound=false;
         }
-        unregisterReceiver(mMBroadcastReceiver);
+        //unregisterReceiver(mMBroadcastReceiver);
     }
 
 
@@ -153,8 +162,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            Toast.makeText(context,""+intent.getBooleanExtra("Status",false),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context,"azertyuio "+intent.getBooleanExtra("Status",false),Toast.LENGTH_SHORT).show();
+            //+intent.getBooleanExtra("Status",false)
             //isPlaying = intent.getBooleanExtra("Status",false);
+            if(intent.getBooleanExtra("Status",false))
+            {
+                playButton.setText("PAUSE");
+            }
+            else
+            {
+                playButton.setText("PLAY");
+            }
             //Toast.makeText(getApplicationContext(),"playing : "+message,Toast.LENGTH_SHORT).show();
             // Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }

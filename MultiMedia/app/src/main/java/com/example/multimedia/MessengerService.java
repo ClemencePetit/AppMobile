@@ -41,6 +41,7 @@ public class MessengerService extends Service {
             }
         });
         context=this;
+        //Toast.makeText(context,"CREATE SERVICE",Toast.LENGTH_SHORT).show();
     }
 
     private void setMusic(){
@@ -90,7 +91,7 @@ public class MessengerService extends Service {
                         super.handleMessage(msg);
             }
 
-            //sendMessageToActivity();
+            sendMessageToActivity();
         }
     }
 
@@ -103,6 +104,7 @@ public class MessengerService extends Service {
 
     @Override
     public void onDestroy() {
+       // Toast.makeText(context,"destroy",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -119,7 +121,7 @@ public class MessengerService extends Service {
         //LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         sendBroadcast(intent);
 
-        Toast.makeText(context,"pifpafpouf",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context,"pifpafpouf",Toast.LENGTH_SHORT).show();
 
     }
 
