@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +36,11 @@ public class MainActivity extends AppCompatActivity {
     boolean bound;
     boolean sent=false;
     boolean isPlaying=false;
-    IntentFilter filter;
+    IntentFilter filter1;
+    IntentFilter filter2;
+    IntentFilter filter3;
     Button playButton;
+    SeekBar seekBar;
 
 
     @Override
@@ -54,10 +58,19 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.simplerow, listOfSongs.getNames());
         ListView listView =(ListView) findViewById(R.id.listMusics);
         listView.setAdapter(adapter);
-        filter = new IntentFilter();
-        filter.addAction("isPlaying");
+        filter1 = new IntentFilter();
+        filter1.addAction("isPlaying");
+        filter2 = new IntentFilter();
+        filter2.addAction("startMusic");
+        filter3 = new IntentFilter();
+        filter3.addAction("updateSeekbar");
+
+        registerReceiver(mMBroadcastReceiver, filter1);
+        registerReceiver(mMBroadcastReceiver, filter2);
+        registerReceiver(mMBroadcastReceiver, filter3);
+
         playButton=(Button)findViewById(R.id.playButton);
-        registerReceiver(mMBroadcastReceiver, filter);
+        seekBar=(SeekBar)findViewById(R.id.seekBar);
 
 
     }
@@ -165,13 +178,24 @@ public class MainActivity extends AppCompatActivity {
             //Toast.makeText(context,"azertyuio "+intent.getBooleanExtra("Status",false),Toast.LENGTH_SHORT).show();
             //+intent.getBooleanExtra("Status",false)
             //isPlaying = intent.getBooleanExtra("Status",false);
-            if(intent.getBooleanExtra("Status",false))
+            if(intent.getAction().compareTo("isPlaying")==0){
+                if(intent.getBooleanExtra("Status",false))
+                {
+                    playButton.setText("PAUSE");
+                }
+                else
+                {
+                    playButton.setText("PLAY");
+                }
+            }else if(intent.getAction().compareTo("startMusic")==0)
             {
-                playButton.setText("PAUSE");
-            }
-            else
+                Toast.makeText(context, "start musique "+intent.getIntExtra("MaxDuration",0), Toast.LENGTH_SHORT).show();
+                seekBar.setMax(intent.getIntExtra("MaxDuration",0));
+            }else if(intent.getAction().compareTo("updateSeekbar")==0)
             {
-                playButton.setText("PLAY");
+                //Toast.makeText(context, "start musique", Toast.LENGTH_SHORT).show();
+                seekBar.setProgress(intent.getIntExtra("Seek",0));
+               // playButton.setText(""+intent.getIntExtra("Seek",0));
             }
             //Toast.makeText(getApplicationContext(),"playing : "+message,Toast.LENGTH_SHORT).show();
             // Toast.makeText(context, message, Toast.LENGTH_SHORT).show();

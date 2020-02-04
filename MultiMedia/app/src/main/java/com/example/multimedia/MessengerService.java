@@ -42,6 +42,7 @@ public class MessengerService extends Service {
         });
         context=this;
         //Toast.makeText(context,"CREATE SERVICE",Toast.LENGTH_SHORT).show();
+        updateSeekbar();
     }
 
     private void setMusic(){
@@ -49,6 +50,11 @@ public class MessengerService extends Service {
         try { mp.setDataSource(this,Uri.parse((musicPaths.get(currentIndex)))); } catch (Exception e) {}
         try { mp.prepare(); } catch (Exception e) {}
         mp.start();
+        Intent intent = new Intent();
+        //intent.putExtra("Status", mp.isPlaying());
+        intent.putExtra("MaxDuration",mp.getDuration()/1000);
+        intent.setAction("startMusic");
+        sendBroadcast(intent);
     }
 
    private void setPause(){
@@ -123,6 +129,23 @@ public class MessengerService extends Service {
 
         //Toast.makeText(context,"pifpafpouf",Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void updateSeekbar() {
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mp.isPlaying()) {
+                    Intent intent = new Intent();
+                    intent.putExtra("Seek", mp.getCurrentPosition()/1000);
+                    intent.setAction("updateSeekbar");
+                    sendBroadcast(intent);
+                    //Toast.makeText(context,"pifpafpouf",Toast.LENGTH_SHORT).show();
+                }
+                handler.postDelayed(this, 1000);
+            }
+        });
     }
 
 }
